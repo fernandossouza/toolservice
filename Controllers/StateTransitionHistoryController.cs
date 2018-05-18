@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using securityfilter;
 using toolservice.Model;
 using toolservice.Service.Interface;
 
@@ -22,6 +23,7 @@ namespace toolservice.Controllers {
         }
 
         [HttpGet]
+        [SecurityFilter ("tools__allow_read")]
         public async Task<IActionResult> GetId ([FromQuery] int toolid, [FromQuery] long? from = null, [FromQuery] long? to = null) {
             if (from == null) {
                 from = DateTime.Now.Date.Ticks;

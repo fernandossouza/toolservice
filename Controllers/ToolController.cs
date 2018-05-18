@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using securityfilter;
 using toolservice.Model;
 using toolservice.Service.Interface;
 
@@ -16,6 +17,7 @@ namespace toolservice.Controllers {
         }
 
         [HttpGet]
+        [SecurityFilter ("tools__allow_read")]
         public async Task<IActionResult> GetList ([FromQuery] int startat, [FromQuery] int quantity, [FromQuery] string fieldFilter, [FromQuery] string fieldValue, [FromQuery] string orderField, [FromQuery] string order) {
 
             var fieldFilterEnum = ToolFieldEnum.Default;
@@ -33,6 +35,7 @@ namespace toolservice.Controllers {
         }
 
         [HttpGet ("{id}")]
+        [SecurityFilter ("tools__allow_read")]
         public async Task<IActionResult> GetId (int id) {
 
             var tool = await _toolService.getTool (id);
@@ -41,6 +44,7 @@ namespace toolservice.Controllers {
         }
 
         [HttpGet ("thing/{thingid}")]
+        [SecurityFilter ("tools__allow_read")]
         public async Task<IActionResult> GetThindId (int thingid) {
 
             var tool = await _toolService.getToolsOnThing (thingid);
@@ -49,6 +53,7 @@ namespace toolservice.Controllers {
         }
 
         [HttpGet ("inuse/")]
+        [SecurityFilter ("tools__allow_read")]
         public async Task<IActionResult> getInUse () {
             var tool = await _toolService.getToolsInUSe ();
             return Ok (tool);
@@ -56,6 +61,7 @@ namespace toolservice.Controllers {
         }
 
         [HttpPost]
+        [SecurityFilter ("tools__allow_update")]
         public async Task<IActionResult> Post ([FromBody] Tool tool) {
 
             if (ModelState.IsValid) {
@@ -69,6 +75,7 @@ namespace toolservice.Controllers {
         }
 
         [HttpPut ("{id}")]
+        [SecurityFilter ("tools__allow_update")]
         public async Task<IActionResult> Put (int id, [FromBody] Tool tool) {
 
             if (ModelState.IsValid) {
@@ -84,6 +91,7 @@ namespace toolservice.Controllers {
         }
 
         [HttpDelete ("{id}")]
+        [SecurityFilter ("tools__allow_update")]
         public async Task<IActionResult> Delete (int id) {
             {
 
