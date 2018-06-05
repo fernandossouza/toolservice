@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using securityfilter.Services;
+using securityfilter.Services.Interfaces;
 using toolservice.Data;
 using toolservice.Service;
 using toolservice.Service.Interface;
@@ -34,12 +36,15 @@ namespace toolservice {
                     .AllowAnyMethod ()
                     .AllowAnyHeader ();
             }));
+
+            services.AddSingleton<IConfiguration> (Configuration);
+            services.AddTransient<IEncryptService, EncryptService> ();
+
             if (!String.IsNullOrEmpty (Configuration["KeyFolder"]))
                 services.AddDataProtection ()
                 .SetApplicationName ("Lorien")
                 .PersistKeysToFileSystem (new DirectoryInfo (Configuration["KeyFolder"]));
-                
-            services.AddSingleton<IConfiguration> (Configuration);
+
             services.AddSingleton<IThingService, ThingService> ();
             services.AddSingleton<IThingGroupService, ThingGroupService> ();
             services.AddTransient<IToolTypeService, ToolTypeService> ();
