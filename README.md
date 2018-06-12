@@ -236,9 +236,9 @@ API to Manage the current state of a tool on Lorien. Used to update the status o
 }
 ```
 
-* /api/tool/statemanagement/id{toolid}{state}
+* /api/tool/statemanagement/id{toolid}{state}{username}
 
-  * Put: Update the status of the tool where toolid = toolid to the Status = State (Valid States: available, in_use, in_maintenance, not_available, inactive)
+  * Put: Update the status of the tool where toolid = toolid to the Status = State (Valid States: available, in_use, in_maintenance, not_available, inactive), username = user loged into the system
     * IMPORTANT: If the status require its needed to send a justification JSON on the body:
 
 ```json
@@ -275,6 +275,8 @@ These are the fields of the StateTransitionHistory and it's constrains:
   * Double
 * tool: Tool of the history
   * Tool Json
+* username: User logged into the system
+  * String
 
 ```json
 {
@@ -289,7 +291,8 @@ These are the fields of the StateTransitionHistory and it's constrains:
     "unitOfMeasurement": "minute",
     "typeId": 1,
     "typeName": "Tipo",
-    "status": "available"
+    "status": "available",
+    "username": "fernando"
   },
   "toolId": 1,
   "justificationNeeded": true,
