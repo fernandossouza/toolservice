@@ -131,6 +131,7 @@ namespace toolservice.Service {
                 return null;
             }
             toolDB.currentThingId = thingId;
+            toolDB.username = tool.username;
 
             _context.Tools.Update (toolDB);
             await _context.SaveChangesAsync ();
@@ -146,7 +147,7 @@ namespace toolservice.Service {
             await _context.SaveChangesAsync ();
             return toolDB;
         }
-        public async Task<Tool> updateTool (int toolId, Tool tool) {
+        public async Task<Tool> updateTool (int toolId, Tool tool, string username) {
             var toolDB = await _context.Tools
                 .Where (x => x.toolId == toolId)
                 .AsNoTracking ()
@@ -165,13 +166,13 @@ namespace toolservice.Service {
             return await getTool (tool.toolId);
         }
 
-        public async Task<Tool> deleteTool (int toolId) {
+        public async Task<Tool> deleteTool (int toolId, string username) {
             var toolDb = await getTool (toolId);
             if (toolDb == null) {
                 return null;
             }
             toolDb.status = "inactive";
-            toolDb = await updateTool (toolId, toolDb);
+            toolDb = await updateTool (toolId, toolDb, username);
             return toolDb;
         }
 

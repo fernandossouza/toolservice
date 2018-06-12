@@ -33,6 +33,7 @@ namespace toolservice.Service
             stateTransitionHistory.nextState = nextState;
             stateTransitionHistory.timeStampTicks = DateTime.Now.Ticks;
             stateTransitionHistory.previoustLife = previoustLife;
+            stateTransitionHistory.username = tool.username;
             _context.StateTransitionHistories.Add(stateTransitionHistory);
             await _context.SaveChangesAsync();
         }

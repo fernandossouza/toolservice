@@ -16,6 +16,7 @@ namespace toolservice.Model
         public string nextState { get; set; }
         public long timeStampTicks { get; set; }
         public double previoustLife { get; set; }
+        public string username { get; set; }
 
     }
 }

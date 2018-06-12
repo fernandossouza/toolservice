@@ -11,8 +11,8 @@ namespace toolservice.Service.Interface {
         Task<Tool> setToolToThing (Tool tool, int? thingId);
         Task<Tool> setToolToPosition (Tool tool, int? position);
         Task<Tool> getTool (int toolId);
-        Task<Tool> updateTool (int toolId, Tool tool);
-        Task<Tool> deleteTool (int toolId);
+        Task<Tool> updateTool (int toolId, Tool tool, string username);
+        Task<Tool> deleteTool (int toolId, string username);
         Task<Tool> addTool (Tool tool);
     }
 

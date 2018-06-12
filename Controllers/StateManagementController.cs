@@ -24,13 +24,13 @@ namespace toolservice.Controllers {
 
         [HttpPut ("id/")]
         [SecurityFilter ("tools__allow_update")]
-        public async Task<IActionResult> UpdateById ([FromBody] Justification justification, [FromQuery] int toolid, [FromQuery] string state) {
+        public async Task<IActionResult> UpdateById ([FromBody] Justification justification, [FromQuery] int toolid, [FromQuery] string state,[FromQuery] string username) {
 
             stateEnum newState = stateEnum.available;
             if (!Enum.TryParse (state, out newState))
                 return BadRequest ("State Not Found");
 
-            var tools = await _stateManagementService.setToolToStatusById (toolid, newState, justification);
+            var tools = await _stateManagementService.setToolToStatusById (toolid, newState, justification,username);
             if (tools == null)
                 return BadRequest ("State Change not Allowed By Configuration");
             return Ok (tools);
@@ -38,12 +38,12 @@ namespace toolservice.Controllers {
 
         [HttpPut ("number/")]
         [SecurityFilter ("tools__allow_update")]
-        public async Task<IActionResult> UpdateByNumber ([FromBody] Justification justification, [FromQuery] string serial, [FromQuery] string state) {
+        public async Task<IActionResult> UpdateByNumber ([FromBody] Justification justification, [FromQuery] string serial, [FromQuery] string state, [FromQuery] string username) {
 
             stateEnum newState = stateEnum.available;
             if (!Enum.TryParse (state, out newState))
                 return BadRequest ("State Not Found");
-            var tools = await _stateManagementService.setTootlToStatusByNumber (serial, newState, justification);
+            var tools = await _stateManagementService.setTootlToStatusByNumber (serial, newState, justification, username);
             if (tools == null)
                 return BadRequest ("State Change not Allowed By Configuration");
             return Ok (tools);
