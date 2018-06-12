@@ -45,5 +45,7 @@ namespace toolservice.Model {
         [NotMapped]
         public double lifeCycle { get; set; }
 
+        public string username { get; set; }
+
     }
 }

@@ -41,29 +41,34 @@ namespace toolservice.Service {
             }
         }
 
-        public async Task<Tool> setToolToStatusById (int toolId, stateEnum newState, Justification justification) {
+        public async Task<Tool> setToolToStatusById (int toolId, stateEnum newState, Justification justification,string username) {
             var tool = await _context.Tools
                 .Where (x => x.toolId == toolId)
                 .FirstOrDefaultAsync ();
+
+            tool.username = username;
+            Console.WriteLine("setToolToStatusById -  username: ");
+            Console.WriteLine(username);
+            
             if (tool == null)
                 return null;
-            return await updateTool (tool, newState, justification);
+            return await updateTool (tool, newState, justification, username);
         }
 
         public async Task<Tool> setTootlToStatusByNumber (string toolSerialNumber, stateEnum newState,
-            Justification justification) {
+            Justification justification, string username) {
             var tool = await _context.Tools
                 .Where (x => x.serialNumber == toolSerialNumber)
                 .FirstOrDefaultAsync ();
             if (tool == null)
                 return null;
-            return await updateTool (tool, newState, justification);
+            return await updateTool (tool, newState, justification,username);
         }
 
         public StateConfiguration getPossibleStatusTransition () {
             return _stateConfiguration;
         }
-        private async Task<Tool> updateTool (Tool tool, stateEnum newState, Justification justification) {
+        private async Task<Tool> updateTool (Tool tool, stateEnum newState, Justification justification, string username) {
 
             var curState = _stateConfiguration.states
                 .Where (x => x.state == tool.status.ToString ()).FirstOrDefault ();
@@ -82,6 +87,8 @@ namespace toolservice.Service {
                 tool.status = newState.ToString ();
                 _context.Entry (tool).State = EntityState.Modified;
                 await _context.SaveChangesAsync ();
+                // passa o nome do usuario que fez a modificação na ferramenta
+                tool.username = username;
                 await _stateTransitionHistoryService.addToolHistory (tool.toolId, newStateObject.needsJustification, tool.currentLife,
                     tool, justification, curState.state.ToString (), newState.ToString ());
                 Trigger (tool);

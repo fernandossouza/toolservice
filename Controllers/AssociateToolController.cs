@@ -25,13 +25,13 @@ namespace toolservice.Controllers {
         [HttpPut ("associate/")]
         [Produces ("application/json")]
         [SecurityFilter ("tools__allow_update")]
-        public async Task<IActionResult> Associate ([FromQuery] int thingId, [FromQuery] int toolId, [FromQuery] int? position) {
+        public async Task<IActionResult> Associate ([FromQuery] int thingId, [FromQuery] int toolId, [FromQuery] int? position, [FromQuery] string username) {
             Tool tool;
             string result;
             if (position == null)
-                (tool, result) = await _associateToolService.AssociateWithoutPosition (thingId, toolId);
+                (tool, result) = await _associateToolService.AssociateWithoutPosition (thingId, toolId,username);
             else
-                (tool, result) = await _associateToolService.AssociateWithPosition (thingId, toolId, position);
+                (tool, result) = await _associateToolService.AssociateWithPosition (thingId, toolId, position,username);
 
             if (tool == null)
                 return BadRequest (result);
@@ -41,9 +41,9 @@ namespace toolservice.Controllers {
         [HttpPut ("disassociate/")]
         [Produces ("application/json")]
         [SecurityFilter ("tools__allow_update")]
-        public async Task<IActionResult> Disassociate ([FromBody] Tool tool) {
+        public async Task<IActionResult> Disassociate ([FromBody] Tool tool, [FromQuery] string username) {
             if (ModelState.IsValid) {
-                var (returnTool, result) = await _associateToolService.DisassociateTool (tool);
+                var (returnTool, result) = await _associateToolService.DisassociateTool (tool,username);
                 if (returnTool == null)
                     return BadRequest (result);
                 return Ok (returnTool);

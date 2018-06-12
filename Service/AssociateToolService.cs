@@ -70,13 +70,14 @@ namespace toolservice.Service {
             return (tool, "Tool Set to Use");
         }
 
-        public async Task<(Tool, string)> AssociateWithoutPosition (int thingId, int toolId) {
+        public async Task<(Tool, string)> AssociateWithoutPosition (int thingId, int toolId, string username) {
             var tool = await _toolService.getTool (toolId);
+            tool.username = username;
             string result;
             (tool, result) = await AssociateTool (thingId, toolId);
             if (tool == null)
                 return (null, result);
-            tool = await _stateManagementService.setToolToStatusById (toolId, stateEnum.in_use, null);
+            tool = await _stateManagementService.setToolToStatusById (toolId, stateEnum.in_use, null, username);
             tool = await _toolService.setToolToThing (tool, thingId);
             tool = await _toolService.getTool (tool.toolId);
 
@@ -84,7 +85,7 @@ namespace toolservice.Service {
             return (tool, result);
         }
 
-        public async Task<(Tool, string)> AssociateWithPosition (int thingId, int toolId, int? position) {
+        public async Task<(Tool, string)> AssociateWithPosition (int thingId, int toolId, int? position, string username) {
             Tool tool;
             string result;
 
@@ -98,7 +99,8 @@ namespace toolservice.Service {
                 return (null, result);
             }
 
-            tool = await _stateManagementService.setToolToStatusById (toolId, stateEnum.in_use, null);
+            tool.username = username;
+            tool = await _stateManagementService.setToolToStatusById (toolId, stateEnum.in_use, null, "");
             tool = await _toolService.setToolToThing (tool, thingId);
             tool = await _toolService.setToolToPosition (tool, position);
             tool = await _toolService.getTool (tool.toolId);
@@ -106,15 +108,16 @@ namespace toolservice.Service {
             Trigger (tool);
             return (tool, result);
         }
-        public async Task<(Tool, string)> DisassociateTool (Tool tool) {
+        public async Task<(Tool, string)> DisassociateTool (Tool tool, string username) {
             var toolDb = await _toolService.getTool (tool.toolId);
             if (tool == null)
                 return (null, "Tool Not Found");
             if (toolDb.status != stateEnum.in_use.ToString ())
                 return (null, "Tool Not In Use");
             if (toolDb.currentLife > tool.currentLife)
-                return (null, "Current Life can be greater than the previou Life");
-            toolDb = await _stateManagementService.setToolToStatusById (tool.toolId, stateEnum.available, null);
+                return (null, "Current Life can be greater than the previous Life");
+            tool.username = username;
+            toolDb = await _stateManagementService.setToolToStatusById (tool.toolId, stateEnum.available, null, username);
             toolDb = await _toolService.setToolToThing (toolDb, null);
             toolDb = await _toolService.setToolToPosition (toolDb, null);
             toolDb.currentThing = null;

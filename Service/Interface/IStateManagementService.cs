@@ -5,8 +5,8 @@ namespace toolservice.Service.Interface
 {
     public interface IStateManagementService
     {
-        Task<Tool> setToolToStatusById(int toolId, stateEnum newState, Justification justification);
-        Task<Tool> setTootlToStatusByNumber(string toolSerialNumber, stateEnum newState, Justification justification);
+        Task<Tool> setToolToStatusById(int toolId, stateEnum newState, Justification justification,string username);
+        Task<Tool> setTootlToStatusByNumber(string toolSerialNumber, stateEnum newState, Justification justification,string username);
         StateConfiguration getPossibleStatusTransition();
     }
 

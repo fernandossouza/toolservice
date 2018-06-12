@@ -76,11 +76,11 @@ namespace toolservice.Controllers {
 
         [HttpPut ("{id}")]
         [SecurityFilter ("tools__allow_update")]
-        public async Task<IActionResult> Put (int id, [FromBody] Tool tool) {
+        public async Task<IActionResult> Put (int id, [FromBody] Tool tool, [FromQuery] string username) {
 
             if (ModelState.IsValid) {
 
-                var toolDb = await _toolService.updateTool (id, tool);
+                var toolDb = await _toolService.updateTool (id, tool,username);
                 if (toolDb == null) {
                     return NotFound ();
                 }
@@ -92,12 +92,12 @@ namespace toolservice.Controllers {
 
         [HttpDelete ("{id}")]
         [SecurityFilter ("tools__allow_update")]
-        public async Task<IActionResult> Delete (int id) {
+        public async Task<IActionResult> Delete (int id, [FromQuery] string username) {
             {
 
                 if (id > 0) {
 
-                    var toolDb = await _toolService.deleteTool (id);
+                    var toolDb = await _toolService.deleteTool (id, username);
                     if (toolDb == null) {
                         return NotFound ();
                     }
