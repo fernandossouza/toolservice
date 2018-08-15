@@ -105,6 +105,17 @@ namespace toolservice.Service {
             return tools;
         }
 
+        public async Task<(List<Tool>, HttpStatusCode)> getToolsOnIds(List<int> ids) {
+            var tools = await _context.Tools
+                .Where (x => ids.Contains(x.toolId))
+                .ToListAsync ();
+            if (tools == null || tools.Count == 0)
+                return (null, HttpStatusCode.NotFound); 
+            foreach(Tool t in tools)
+                t.typeName = (await _toolTypeService.getToolType(t.typeId.Value)).name;
+            return (tools, HttpStatusCode.OK);
+        }
+
         public async Task<Tool> getTool (int toolId) {
             var tool = await _context.Tools
                 .Where (x => x.toolId == toolId)

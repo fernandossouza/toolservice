@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using securityfilter;
@@ -43,13 +44,20 @@ namespace toolservice.Controllers {
 
         }
 
+        [HttpGet("ids")]
+        public async Task<IActionResult> GetIds([FromQuery] string ids) {            
+            List<int> nums = ids.Split(",").Select(int.Parse).ToList();
+            var (tools, status) = await _toolService.getToolsOnIds(nums);
+            if(status == HttpStatusCode.OK)
+                return Ok(tools);
+            return NotFound("Nenhum valor de tool encontrado!");    
+        }    
+
         [HttpGet ("thing/{thingid}")]
         [SecurityFilter ("tools__allow_read")]
         public async Task<IActionResult> GetThindId (int thingid) {
-
             var tool = await _toolService.getToolsOnThing (thingid);
             return Ok (tool);
-
         }
 
         [HttpGet ("inuse/")]
