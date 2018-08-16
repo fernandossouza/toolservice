@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using toolservice.Model;
 
@@ -14,6 +15,7 @@ namespace toolservice.Service.Interface {
         Task<Tool> updateTool (int toolId, Tool tool, string username);
         Task<Tool> deleteTool (int toolId, string username);
         Task<Tool> addTool (Tool tool);
+        Task<(List<Tool>,HttpStatusCode)> getToolsOnIds(List<int> nums);
     }
 
     public enum ToolFieldEnum {
