@@ -44,7 +44,8 @@ namespace toolservice.Controllers {
 
         }
 
-        [HttpGet("ids/")]
+        [HttpGet("ids/")]        
+        [SecurityFilter ("tools__allow_read")]
         public async Task<IActionResult> GetIds([FromQuery] string ids) {            
             List<int> nums = ids.Split(",").Select(int.Parse).ToList();
             var (tools, status) = await _toolService.getToolsOnIds(nums);
