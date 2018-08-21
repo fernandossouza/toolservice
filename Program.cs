@@ -16,7 +16,7 @@ namespace toolservice {
 
         public static IWebHost BuildWebHost (string[] args) =>
             WebHost.CreateDefaultBuilder (args)
-            .UseUrls ("http://*:5005")
+            //.UseUrls ("http://*:5005")
             .UseStartup<Startup> ()
             .Build ();
     }
